@@ -39,7 +39,7 @@ export const actions = {
 	    var ages = parseInt(customer.age)
 	
 		const res = await axios.post('customers', {name:customer.name, age:ages, active:customer.active})
-		
+		console.log(res.data);
 		commit('addCustomer', res.data)
 	},
 
@@ -49,14 +49,15 @@ export const actions = {
 	},
 
 	async editData({commit}, customer){
-
+		console.log(customer.active);
 		var ages = parseInt(customer.age)
-		const res = await axios.put('customers/'+ customer.id, {name:customer.name, age:ages})
+		const res = await axios.put('customers/'+ customer.id, {name:customer.name, age:ages, active:customer.active})
 		commit('editCustomer', res.data)
 	},
 
 	async editActive({commit}, customer){
-		const res = await axios.put('customers/'+ customer.id, {name:customer.name, age:customer.age, active:!customer.active})
+		const res = await axios.put('customers/'+ customer.id, {name:customer.name, age:customer.age,active:!customer.active})
+		
 		commit('editCustomer', res.data)
 	}
 

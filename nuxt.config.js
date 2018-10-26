@@ -2,7 +2,7 @@ const pkg = require('./package')
 
 const routerBase = process.env.DEPLOY_ENV === 'GH_PAGES' ? {
   router: {
-    base: '/<repository-name>/'
+    base: '/crud-nuxt-js/'
   }
 } : {}
 
@@ -34,10 +34,10 @@ module.exports = {
   */
   loading: { color: '#fff' },
 
-  server : {
-    port : 8000,
-    host : 'localhost'
-  },
+  // server : {
+  //   port : 8000,
+  //   host : 'localhost'
+  // },
 
   /*
   ** Global CSS

@@ -1,94 +1,93 @@
 <template>
  
-    <div>
-      <b-navbar toggleable="md" type="dark" variant="info">
+  <div>
+    <b-container style="pading-top:300px">
+      <b-row>
 
-        <b-navbar-toggle target="nav_collapse"></b-navbar-toggle>
+        <b-col md="6">
+          <b-row>
 
-        <b-navbar-brand href="#">NavBar</b-navbar-brand>
+            <b-col md="2" class="my-1">
+              <label>Name</label>
+            </b-col>
+            <b-col md="9">
+              <b-form-input type="text"  v-model="customer.name"></b-form-input>
+            </b-col>
 
-        <b-collapse is-nav id="nav_collapse">
+            <b-col sm="2" class="my-1">
+              <label>Age</label>
+            </b-col>
+            <b-col sm="9">    
+              <b-form-input type="text"  v-model="customer.age"></b-form-input>
+            </b-col>
 
-          <b-navbar-nav>
-            <b-nav-item href="#">Link</b-nav-item>
-            <b-nav-item href="#" disabled>Disabled</b-nav-item>
-          </b-navbar-nav>
+            <b-col class="my-1">
+              <b-button variant="primary" @click="add()">submit</b-button>
+            </b-col>
 
-          <!-- Right aligned nav items -->
-          <b-navbar-nav class="ml-auto">
+          </b-row>
+        </b-col>
 
-            <b-nav-form>
-              <b-form-input size="sm" class="mr-sm-2" type="text" placeholder="Search"/>
-              <b-button size="sm" class="my-2 my-sm-0" type="submit">Search</b-button>
-            </b-nav-form>
+        <b-col md="6">
+          <b-row>
 
-            <b-nav-item-dropdown text="Lang" right>
-              <b-dropdown-item href="#">EN</b-dropdown-item>
-              <b-dropdown-item href="#">ES</b-dropdown-item>
-              <b-dropdown-item href="#">RU</b-dropdown-item>
-              <b-dropdown-item href="#">FA</b-dropdown-item>
-            </b-nav-item-dropdown>
+            <b-col md="6" class="my-1">
+              <b-input-group>
+                <b-form-input v-model="filter" placeholder="Type to Search" />
+                <b-input-group-append>
+                  <b-btn :disabled="!filter" @click="filter = ''">Clear</b-btn>
+                </b-input-group-append>
+              </b-input-group>
+            </b-col>
 
-            <b-nav-item-dropdown right>
-              <!-- Using button-content slot -->
-              <template slot="button-content">
-                <em>User</em>
+            <b-col md="6">
+              <b-row>
+                <b-col md="4" class="my-2">
+                  <label>Per Page</label>
+                </b-col>
+                <b-col>
+                  <b-form-select :options="pageOptions" v-model="perPage" />
+                </b-col>
+              </b-row>
+            </b-col>
+
+            <b-table show-empty
+              stacked="md"
+             :items="customers"
+             :fields="fields"
+             :current-page="currentPage"
+             :per-page="perPage"
+             :filter="filter"
+               
+               @filtered="onFiltered">
+
+              <template slot="active" slot-scope="data">
+                <div v-if="data.item.active === 1 || data.item.active === true ">
+                  <b-button size="sm" variant="primary" @click="active(data.item.id)">aktif</b-button>
+                </div>
+                <div v-else>
+                  <b-button size="sm" variant ="danger" @click="active(data.item.id)">tidak aktif</b-button>
+                </div>
               </template>
-              <b-dropdown-item href="#">Profile</b-dropdown-item>
-              <b-dropdown-item href="#">Signout</b-dropdown-item>
-            </b-nav-item-dropdown>
-          </b-navbar-nav>
 
-        </b-collapse>
-      </b-navbar>
+              <template slot="index" slot-scope="data">
+                <b-button size="sm" variant="primary" @click="edit(data.item.id)">edit</b-button>
+                <b-button size="sm" variant ="danger" @click="remove(data.item.id)">remove</b-button>
+              </template>
 
-    <b-container>
-      <b-row >
+            </b-table>
 
-        <b-col sm="6">
+            <b-row>
+              <b-col md="6" class="my-1">
+                <b-pagination :total-rows="totalRows" :per-page="perPage" v-model="currentPage" class="my-0" />
+              </b-col>
+            </b-row>
 
-          <b-col sm="3"><label>Name</label></b-col>
-          <b-col sm="9">
-            <b-form-input type="text"  v-model="customer.name"></b-form-input>
-          </b-col>
-
-          <b-col sm="3"><label>Age</label></b-col>
-          <b-col sm="9">    
-            <b-form-input type="text"  v-model="customer.age"></b-form-input>
-          </b-col>
-
-          <b-col>
-            <b-button variant="primary" @click="add()">submit</b-button>
-          </b-col>
-
+          </b-row>
         </b-col>
 
-        <b-col sm="6">
-          <b-form-input v-model="searchKey"></b-form-input>
-          <b-table :items= "customers" :fields="fields">
-            <!-- <template slot="action">
-              <b-button  @click = "edit(res.id)" >edit</b-button>
-              <b-button  @click = "remove(res.id)">hapus</b-button>
-            </template> -->
-            <template slot="active" slot-scope="data">
-              <div v-if="data.item.active === true">
-                <b-button variant="primary" @click="active(data.item.id)">aktif</b-button>
-              </div>
-              <div v-else>
-                <b-button variant ="danger" @click="active(data.item.id)">tidak aktif</b-button>
-              </div>
-            </template>
-
-            <template slot="index" slot-scope="data">
-              <b-button variant="primary" @click="edit(data.item.id)">edit</b-button>
-              <b-button variant ="primary" @click="remove(data.item.id)">remove</b-button>
-            </template>
-
-          </b-table>
-        </b-col>
-
-        
       </b-row>
+
     </b-container>
 
   </div>
@@ -108,10 +107,11 @@ export default {
         id : 0,
         name : '',
         age : '',
-        active : false
+        active : 1
       },
       customers : this.$store.state.customers,
-      searchKey : '',
+      // searchKey : '',
+     
 
       fields : {
        
@@ -131,8 +131,13 @@ export default {
           label : 'Action'
         }
         
+      },
 
-      }
+      currentPage: 1,
+      perPage: 5,
+      totalRows: this.$store.state.customers.length,
+      pageOptions: [ 5, 10, 15 ],
+      filter: null
       
     }
   },
@@ -146,6 +151,13 @@ export default {
     // filterCustomers(){
     //   return this.customers.filter(res => res.name.toLowerCase().indexOf(this.searchKey.toLowerCase()) !== -1)
     // }
+    sortOptions () {
+      // Create an options list from our fields
+      return this.fields
+        .filter(f => f.sortable)
+        .map(f => { return { text: f.label, value: f.key } })
+    }
+    
   },
 
   methods : {
@@ -162,12 +174,14 @@ export default {
          this.$store.dispatch('submitData', this.customer)
       }
       else if(this.customers[index].id === this.customer.id){
+        this.customer.active = this.customers[index].active
         this.$store.dispatch('editData', this.customer)
       }
       
 
       this.customer.name ='',
       this.customer.age = ''
+      this.customer.id = 0
       
       
       // redirect
@@ -193,6 +207,13 @@ export default {
       var index = this.customers.findIndex(p => p.id === id)
 
       this.$store.dispatch('editActive', this.customers[index])
+    },
+
+    
+    onFiltered (filteredItems) {
+      // Trigger pagination to update the number of buttons/pages due to filtering
+      this.totalRows = filteredItems.length
+      this.currentPage = 1
     }
   },
  
