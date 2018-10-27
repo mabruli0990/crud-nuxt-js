@@ -12,7 +12,7 @@ export default {
 
 module.exports = {
   mode: 'universal',
-
+   
 
   /*
   ** Headers of the page
@@ -34,10 +34,10 @@ module.exports = {
   */
   loading: { color: '#fff' },
 
-  // server : {
-  //   port : 8000,
-  //   host : 'localhost'
-  // },
+  server : {
+    port : 9000,
+    host : 'localhost'
+  },
 
   /*
   ** Global CSS
